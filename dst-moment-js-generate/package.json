@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.7",
+    "luxon": "^3.3.0",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.42"
   }

@@ -35,6 +35,7 @@ const dstCross3Array = [
 
 momentTest();
 DayJsTest();
+LuxonTest();
 
 // moment js works correctly with DST
 function momentTest(startDateStr = '2023-03-24T00:00:00', timeZone = 'Europe/London') {
@@ -52,10 +53,10 @@ function momentTest(startDateStr = '2023-03-24T00:00:00', timeZone = 'Europe/Lon
         const timestamp = date.valueOf();
         const utcOffset = date.utcOffset();
 
-        const parsedLocalTime = moment.tz(timestamp, 'Europe/London');
+        const parsedLocalTime = moment.tz(timestamp, timeZone);
         console.log(`${dateStr},\t${dateIsoStr}`);
         console.log(`UTC timestap and offset: ${timestamp},\t${utcOffset}`);
-        console.log(`Parsed local time: ${parsedLocalTime.format()}`);
+        console.log(`Parsed local time: ${parsedLocalTime.format()}, timestamp: ${parsedLocalTime.valueOf()}`);
         console.log(`IS VALID: ${parsedLocalTime.format() === dateStr}`);
         console.log('----------------------------------------');
     }
@@ -80,11 +81,34 @@ function DayJsTest(startDateStr = '2023-03-24T00:00:00', timeZone = 'Europe/Lond
         const timestamp = date.valueOf();
         const utcOffset = date.utcOffset();
 
-        const parsedLocalTime = dayjs.tz(timestamp, 'Europe/London');
+        const parsedLocalTime = dayjs.tz(timestamp, timeZone);
         console.log(`${dateStr},\t${dateIsoStr}`);
         console.log(`UTC timestap and offset: ${timestamp},\t${utcOffset}`);
         console.log(`Parsed local time: ${parsedLocalTime.format()}`);
         console.log(`IS VALID: ${parsedLocalTime.format() === dateStr}`);
+        console.log('----------------------------------------');
+    }
+}
+
+function LuxonTest(startDateStr = '2023-03-24T00:00:00', timeZone = 'Europe/London') {
+    const { DateTime } = require('luxon');
+
+    console.log();
+    console.log('////////////////////////////////////////');
+    console.log('----------------LUXON-------------------');
+    let date = DateTime.fromISO(startDateStr, { zone: timeZone });
+    for (let index = 0; index < 4; index++) {
+        date = date.plus({ days: 1 });
+        const dateStr = date.toISO();
+        const dateIsoStr = date.toISO();
+        const timestamp = date.valueOf();
+        const utcOffset = date.offset;
+
+        const parsedLocalTime = DateTime.fromMillis(timestamp, { zone: timeZone });
+        console.log(`${dateStr},\t${dateIsoStr}`);
+        console.log(`UTC timestap and offset: ${timestamp},\t${utcOffset}`);
+        console.log(`Parsed local time: ${parsedLocalTime.toISO()}, timestamp: ${parsedLocalTime.valueOf()}`);
+        console.log(`IS VALID: ${parsedLocalTime.toISO() === dateStr}`);
         console.log('----------------------------------------');
     }
 }
